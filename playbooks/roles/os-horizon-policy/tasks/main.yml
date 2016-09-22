@@ -13,16 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Move the existing conf dir to /etc/horizon
-  command: mv "{{ horizon_source_dir }}/conf" /etc/horizon/
-  ignore_errors: yes
+- name: Check if horizon config has been moved
+  stat:
+    path: /etc/horizon/conf
+  register: etc_conf
 
+- name: Check if symbolic link exists for horizon conf
+  stat:
+    path: "{{ horizon_source_dir }}/conf"
+  register: horizon_conf
+
+- name: Move the existing conf dir to /etc/horizon if not exists
+  command: mv -fu "{{ horizon_source_dir }}/conf" /etc/horizon/
+  when: etc_conf.stat.exists == False
+    
 - name: Create symbolic link back to source_dir
   file:
     src: /etc/horizon/conf
     path: "{{ horizon_source_dir }}/conf"
     state: link
-    #command: ln -s /etc/horizon/conf "{{ horizon_source_dir }}/conf"
+  when: horizon_conf.stat.islnk is not defined
 
 - name: Copy the Keystone policy to Horizon
   config_template:
@@ -141,6 +151,11 @@
       config_overrides: "{{ ceilometer_policy_overrides }}"
       config_type: "json"
   when: ceilometer_policy_overrides is defined
+
+- name: Add admin roles to local_settings.py
+  lineinfile:
+     dest: /etc/horizon/local_settings.py
+     line: "\nOPENSTACK_ADMIN_ROLES: [\n   \"admin\",\n   \"cloud-admin\",\n   \"bu-admin\"\n]"
 
 - name: Restart apache
   service:
