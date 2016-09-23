@@ -23,6 +23,10 @@
     path: "{{ openstack_dashboard_source_dir }}/conf"
   register: horizon_conf
 
+- name: Print the contents of my custom variable
+  debug:
+    msg: "policy sources: {{ policy_sources }} and myvar: {{ myvar }}"
+
 - name: Move the existing conf dir to /etc/horizon if not exists
   command: mv -fu "{{ openstack_dashboard_source_dir }}/conf" /etc/horizon/
   when: etc_conf.stat.exists == False
