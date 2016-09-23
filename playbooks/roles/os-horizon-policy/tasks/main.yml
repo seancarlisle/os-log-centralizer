@@ -20,19 +20,19 @@
 
 - name: Check if symbolic link exists for horizon conf
   stat:
-    path: "{{ horizon_source_dir }}/conf"
+    path: "{{ openstack_dashboard_source_dir }}/conf"
   register: horizon_conf
 
 - name: Move the existing conf dir to /etc/horizon if not exists
-  command: mv -fu "{{ horizon_source_dir }}/conf" /etc/horizon/
+  command: mv -fu "{{ openstack_dashboard_source_dir }}/conf" /etc/horizon/
   when: etc_conf.stat.exists == False
     
 - name: Create symbolic link back to source_dir
   file:
     src: /etc/horizon/conf
-    path: "{{ horizon_source_dir }}/conf"
+    path: "{{ openstack_dashboard_source_dir }}/conf"
     state: link
-  when: horizon_conf.stat.islnk is not defined
+  when: horizon_conf.stat.islnk == False
 
 - name: Copy the Keystone policy to Horizon
   config_template:
@@ -155,7 +155,7 @@
 - name: Add admin roles to local_settings.py
   lineinfile:
      dest: /etc/horizon/local_settings.py
-     line: "\nOPENSTACK_ADMIN_ROLES: [\n   \"admin\",\n   \"cloud-admin\",\n   \"bu-admin\"\n]"
+     line: "\nOPENSTACK_KEYSTONE_ADMIN_ROLES = [\n   \"admin\",\n   \"cloud-admin\",\n   \"bu-admin\"\n]"
 
 - name: Restart apache
   service:
