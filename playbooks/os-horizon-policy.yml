@@ -40,6 +40,9 @@
           - { host: "{{ groups['glance_all'][0] }}", dest: "/etc/glance/policy.json", service: "glance" }
           - { host: "{{ groups['ceilometer_all'][0] }}", dest: "/etc/ceilometer/policy.json", service: "ceilometer" }
           - { host: "{{ groups['heat_all'][0] }}", dest: "/etc/heat/policy.json", service: "heat" }
+          - { host: "{{ groups['gnocchi_all'][0] }}", dest: "/etc/gnocchi/policy.json", service: "gnocchi" }
+          - { host: "{{ groups['ironic_all'][0] }}", dest: "/etc/ironic/policy.json", service: "ironic" }
+          - { host: "{{ groups['magnum_all'][0] }}", dest: "/etc/magnum/policy.json", service: "magnum" }
        when: 
          - item.host is defined 
          - inventory_hostname == "{{ item.host }}"
@@ -65,13 +68,30 @@
         config_overrides: "{{ item.overrides }}"
         config_type: "json"
       with_items:
-        - { name: "keystone_policy.json", src: "/tmp/policy_files/keystone_policy.json", overrides: "{{ horizon_keystone_policy_overrides| default({}) }}" }
-        - { name: "nova_policy.json", src: "/tmp/policy_files/nova_policy.json", overrides: "{{ horizon_nova_policy_overrides| default({}) }}" }
-        - { name: "neutron_policy.json", src: "/tmp/policy_files/neutron_policy.json", overrides: "{{ horizon_neutron_policy_overrides| default({}) }}" }
-        - { name: "cinder_policy.json", src: "/tmp/policy_files/cinder_policy.json", overrides: "{{ horizon_cinder_policy_overrides| default({}) }}" }
-        - { name: "glance_policy.json", src: "/tmp/policy_files/glance_policy.json", overrides: "{{ horizon_glance_policy_overrides| default({}) }}" }
-        - { name: "ceilometer_policy.json", src: "/tmp/policy_files/ceilometer_policy.json", overrides: "{{ horizon_ceilometer_policy_overrides| default({}) }}" }
-        - { name: "heat_policy.json", src: "/tmp/policy_files/heat_policy.json", overrides: "{{ horizon_heat_policy_overrides| default({}) }}" }
+        - { name: "keystone_policy.json", src: "/tmp/policy_files/keystone_policy.json", overrides: "{{ horizon_keystone_policy_overrides| default({}) }}", 
+            group: "{{ groups['keystone_all'] }}" }
+        - { name: "nova_policy.json", src: "/tmp/policy_files/nova_policy.json", overrides: "{{ horizon_nova_policy_overrides| default({}) }}",
+            group: "{{ groups['nova_all'] }}" }
+        - { name: "neutron_policy.json", src: "/tmp/policy_files/neutron_policy.json", overrides: "{{ horizon_neutron_policy_overrides| default({}) }}",
+            group: "{{ groups['neutron_all'] }}" }
+        - { name: "cinder_policy.json", src: "/tmp/policy_files/cinder_policy.json", overrides: "{{ horizon_cinder_policy_overrides| default({}) }}",
+            group: "{{ groups['cinder_all'] }}" }
+        - { name: "glance_policy.json", src: "/tmp/policy_files/glance_policy.json", overrides: "{{ horizon_glance_policy_overrides| default({}) }}",
+            group: "{{ groups['glance_all'] }}" }
+        - { name: "ceilometer_policy.json", src: "/tmp/policy_files/ceilometer_policy.json", overrides: "{{ horizon_ceilometer_policy_overrides| default({}) }}",
+            group: "{{ groups['ceilometer_all'] }}" }
+        - { name: "heat_policy.json", src: "/tmp/policy_files/heat_policy.json", overrides: "{{ horizon_heat_policy_overrides| default({}) }}",
+            group: "{{ groups['heat_all'] }}" }
+        - { name: "gnocchi_policy.json", src: "/tmp/policy_files/gnocchi_policy.json", overrides: "{{ horizon_gnocchi_policy_overrides| default({}) }}", 
+            group: "{{ groups['gnocchi_all'] }}" }
+        - { name: "ironic_policy.json", src: "/tmp/policy_files/ironic_policy.json", overrides: "horizon_ironic_policy_overrides| default({}) }}",
+            group: "{{ groups['ironic_all'] }}" }
+        - { name: "magnum_policy.json", src: "/tmp/policy_files/magnum_policy.json", overrides: "horizon_magnum_policy_overrides| default({}) }}",
+            group: "{{ groups['magnum_all'] }}" }
+      when: 
+        - item.group is defined
+        - item.group | length > 0
+ 
   vars:
     openstack_ansible_release: "13.1.3"
     horizon_lib_dir: "/openstack/venvs/horizon-{{ openstack_ansible_release }}/lib/python2.7/site-packages"
@@ -86,20 +106,3 @@
          dest: "/tmp/policy_files"
          state: absent
   
-
-#- name: Disribute Policy Files to Horizon Containers
-#  hosts: horizon_all
-#  user: root
-#  roles:
-#    - os-horizon-policy
-#  vars:
-#    myvar: "{{ groups['nova_all'][0] }}"
-#    policy_sources: { "{{ item.host }}" : "{{ item.src }}" }
-#    with_items:
-#       - { host: "{{ groups['nova_all'][0] }}", src:  "/etc/nova/policy.json" }
-       #"{{ group_names['neutron_all'][0] }}": "/etc/neutron/policy.json"
-       #"{{ keystone_all[0] }}": "/etc/keystone/policy.json"
-       #"{{ glance_all[0] }}": "/etc/glance/policy.json"
-       #cinder_all[0]: "/etc/cinder/policy.json"
-       #"{{ heat_all[0] }}": "/etc/heat/policy.json"
-       #"{{ ceilometer_all[0] }}": "/etc/ceilometer/policy.json"

@@ -1,5 +1,0 @@
-openstack_ansible_release: 13.3.0
-openstack_dashboard_source_dir: "/openstack/venvs/horizon-{{ openstack_ansible_release }}/lib/python2.7/site-packages/openstack_dashboard"
-horizon_system_user_name: horizon
-horizon_system_group_name: www-data
-horizon_lib_dir: "/openstack/venvs/horizon-{{ openstack_ansible_release }}/lib/python2.7/site-packages/"
