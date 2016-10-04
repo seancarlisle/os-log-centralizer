@@ -1,0 +1,39 @@
+- name: Create the logging file
+  template:
+    src: openstack-logs.j2
+    dest: /etc/rsyslog.d/22-openstack-logs.conf
+    owner: "syslog"
+    group: "adm"
+    mode: "0644"
+
+- name: Create the Operating System logging file
+  template:
+    src: os-logs.j2
+    dest: /etc/rsyslog.d/24-os-logs.conf
+    owner: "syslog"
+    group: "adm"
+    mode: "0644"
+
+- name: Create the infrastructure logging file
+  template:
+    src: infrastructure-logs.j2
+    dest: /etc/rsyslog.d/25-infrastructure-logs.conf
+    owner: "syslog"
+    group: "adm"
+    mode: "0644"
+
+- name: Restart rsyslog daemon
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: Copy the logrotate configuration
+  copy:
+    src: central-logging.conf
+    dest: /etc/logrotate.d/central-logging.conf
+   
+- name: Add logrotate to hourly cron jobs
+  copy:
+    src: logrotate
+    dest: /etc/cron.hourly/logrotate
+    mode: "0755"

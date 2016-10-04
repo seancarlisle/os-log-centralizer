@@ -1,0 +1,20 @@
+{% for host in groups['galera'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'galera_server_error' then /var/log/infrastructure/{{ host }}-galera.log
+   if $programname == 'mysql' then /var/log/infrastructure/{{ host }}-mysql.log
+}
+{% endfor %}
+
+{% for host in groups['rabbitmq'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'rabbit@{{ host }}' then /var/log/infrastructure/rabbit@{{ host }}.log
+   if $programname == 'rabbit@{{ host }}-sasl' then /var/log/infrastructure/rabbit@{{ host }}-sasl.log
+   if $programname == 'rabbit@{{ host }}' then /var/log/infrastructure/rabbit@{{ host }}.log
+}
+{% endfor %}
+
+{% for host in groups['memcached'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'memcached' then /var/log/infrastructure/memcached.log
+}
+{% endfor %}

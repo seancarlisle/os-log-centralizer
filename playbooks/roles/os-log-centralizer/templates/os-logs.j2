@@ -1,0 +1,19 @@
+{% for host in groups['all'] %}
+{% if host != 'localhost' %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'history' then /var/log/operatingsystem/{{ host }}-history.log
+   if $programname == 'term' then /var/log/operatingsystem/{{ host }}-term.log
+   if $programname == 'audit' then /var/log/operatingsystem/{{ host }}-audit.log
+   if $programname == 'auth' then /var/log/operatingsystem/{{ host }}-auth.log
+   if $programname == 'boot' then /var/log/operatingsystem/{{ host }}-boot.log
+   if $programname == 'cron' then /var/log/operatingsystem/{{ host }}-cron.log
+   if $programname == 'daemon' then /var/log/operatingsystem/{{ host }}-daemon.log
+   if $programname == 'dmesg' then /var/log/operatingsystem/{{ host }}-dmesg.log
+   if $programname == 'dpgk' then /var/log/operatingsystem/{{ host }}-dpkg.log
+   if $programname == 'kern' then /var/log/operatingsystem/{{ host }}-kern.log
+   if $programname == 'mail' then /var/log/operatingsystem/{{ host }}-mail.log
+   if $programname == 'syslog' then /var/log/operatingsystem/{{ host }}-syslog.log
+   if $programname == 'user' then /var/log/operatingsystem/{{ host }}-user.log
+}
+{% endif %}
+{% endfor %}
