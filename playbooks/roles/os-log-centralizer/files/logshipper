@@ -1,0 +1,77 @@
+#! /bin/bash
+
+# Copyright 2016, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+source /root/openrc
+
+echo "$(date +%F'-'%T) Uploading logs to Swift..." | tee -a /var/log/logshipper.log
+
+if [ -d /var/log/openstack ]
+then
+   cd /var/log/openstack
+   /usr/local/bin/openstack container list | grep openstack-logs &> /dev/null
+   if [ "$?" != "0" ]
+   then
+      /usr/local/bin/openstack container create openstack-logs
+   fi
+   for file in $(ls . | egrep '*.log[0-9]{10,20}')
+   do
+     /usr/local/bin/openstack object create openstack-logs $file &> /var/log/logshipper.log
+   done
+fi
+
+if [ -d /var/log/infrastructure ]
+then
+   cd /var/log/infrastructure
+   /usr/local/bin/openstack container list | grep infrastructure-logs &> /dev/null
+   if [ "$?" != "0" ]
+   then
+      /usr/local/bin/openstack container create infrastructure-logs
+   fi
+   for file in $(ls . | egrep '*.log[0-9]{10,20}')
+   do
+     /usr/local/bin/openstack object create infrastructure-logs $file &> /var/log/logshipper.log
+   done
+fi
+
+if [ -d /var/log/operatingsystem ]
+then
+   cd /var/log/operatingsystem
+   /usr/local/bin/openstack container list | grep operatingsystem-logs &> /dev/null
+   if [ "$?" != "0" ]
+   then
+      /usr/local/bin/openstack container create operatingsystem-logs
+   fi
+   for file in $(ls . | egrep '*.log[0-9]{10,20}')
+   do
+     /usr/local/bin/openstack object create operatingsystem-logs $file &> /var/log/logshipper.log
+   done
+fi
+
+if [ -d /var/log/networkgear ]
+then
+   cd /var/log/networkgear
+   /usr/local/bin/openstack container list | grep networkgear-logs &> /dev/null
+   if [ "$?" != "0" ]
+   then
+      /usr/local/bin/openstack container create networkgear-logs
+   fi
+   for file in $(ls . | egrep '*.log[0-9]{10,20}')
+   do
+     /usr/local/bin/openstack object create networkgear-logs $file &> /var/log/logshipper.log
+   done
+fi
+
+echo "$(date +%F'-'%T) Finished uploading" | tee -a /var/log/logshipper.log

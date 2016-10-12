@@ -6,10 +6,9 @@ if $hostname == '{{ host | regex_replace('_', '-') }}' then {
 {% endfor %}
 
 {% for host in groups['rabbitmq'] %}
-if $hostname == '{{ host | regex_replace('_', '-') }}' then {
-   if $programname == 'rabbit@{{ host }}' then /var/log/infrastructure/rabbit@{{ host }}.log
-   if $programname == 'rabbit@{{ host }}-sasl' then /var/log/infrastructure/rabbit@{{ host }}-sasl.log
-   if $programname == 'rabbit@{{ host }}' then /var/log/infrastructure/rabbit@{{ host }}.log
+# Rabbit will send the whole hostname i.e. rabbit@aio1-rabbit-mq-container-a1b2c3d4, have to truncate
+if $hostname == '{{ host | regex_replace('_', '-')  }}' then {
+   if $programname == 'rabbit@{{ host | regex_replace('_', '-') | truncate (25, True, '') }}' then /var/log/infrastructure/rabbit@{{ host | regex_replace('_', '-') }}.log
 }
 {% endfor %}
 

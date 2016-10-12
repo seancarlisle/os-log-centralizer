@@ -1,0 +1,40 @@
+/var/log/openstack/* {
+   rotate 3
+   hourly
+   missingok
+   copytruncate
+   compress
+   dateext
+   dateformat %s
+}
+
+/var/log/operatingsystem/* {
+   rotate 3
+   hourly
+   missingok
+   copytruncate
+   compress
+   dateext
+   dateformat %s
+}
+
+/var/log/infrastructure/* {
+   rotate 3
+   hourly
+   missingok
+   copytruncate
+   compress
+   dateext
+   dateformat %s
+}
+
+/var/log/networkgear/* {
+   rotate 3
+   hourly
+   missingok
+   copytruncate
+   compress
+   dateext
+   dateformat %s
+}
+

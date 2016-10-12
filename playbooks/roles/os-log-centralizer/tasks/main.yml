@@ -1,4 +1,4 @@
-- name: Create the logging file
+- name: Create the OpenStack logging file
   template:
     src: openstack-logs.j2
     dest: /etc/rsyslog.d/22-openstack-logs.conf
@@ -22,6 +22,34 @@
     group: "adm"
     mode: "0644"
 
+- name: Create the openstack directory
+  file:
+    state: directory
+    dest: /var/log/openstack
+    owner: syslog
+    group: adm
+
+- name: Create the operatingsystem directory
+  file:
+    state: directory
+    dest: /var/log/operatingsystem
+    owner: syslog
+    group: adm
+
+- name: Create the infrastructure directory
+  file:
+    state: directory
+    dest: /var/log/infrastructure
+    owner: syslog
+    dest: adm
+
+- name: Create the networkgear directory
+  file:
+    state: directory
+    dest: /var/log/networkgear
+    owner: syslog
+    group: adm
+
 - name: Restart rsyslog daemon
   service:
     name: rsyslog
@@ -29,11 +57,23 @@
 
 - name: Copy the logrotate configuration
   copy:
-    src: central-logging.conf
-    dest: /etc/logrotate.d/central-logging.conf
+    src: central-logging
+    dest: /etc/logrotate.d/central-logging
    
 - name: Add logrotate to hourly cron jobs
   copy:
     src: logrotate
     dest: /etc/cron.hourly/logrotate
+    mode: "0755"
+
+- name: Add cronjob to upload freshly rotated files
+  lineinfile:
+    line: "25 * * * * root /usr/local/bin/logshipper"
+    dest: "/etc/crontab"
+    state: present
+
+- name: Add logshipper script to upload freshly rotated files
+  copy:
+    src: logshipper
+    dest: /usr/local/bin
     mode: "0755"
