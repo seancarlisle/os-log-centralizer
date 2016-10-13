@@ -14,6 +14,15 @@ if $hostname == '{{ host | regex_replace('_', '-')  }}' then {
 
 {% for host in groups['memcached'] %}
 if $hostname == '{{ host | regex_replace('_', '-') }}' then {
-   if $programname == 'memcached' then /var/log/infrastructure/memcached.log
+   if $programname == 'memcached' then /var/log/infrastructure/'{{ host | regex_replace('_', '-') }}'-memcached.log
+}
+{% endfor %}
+
+{% for host in groups['repo_container'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'access' then /var/log/infrastructure/'{{ host | regex_replace('_', '-') }}'-nginx-access.log
+   if $programname == 'error' then /var/log/infrastructure/'{{ host | regex_replace('_', '-') }}'-nginx-error.log
+   if $programname == 'openstack-slushee.access' then /var/log/infrastructure/'{{ host | regex_replace('_', '-') }}'-nginx-openstack-slushee.access.log
+   if $programname == 'openstack-slushee.error' then /var/log/infrastructure/'{{ host | regex_replace('_', '-') }}'-nginx-openstack-slushee.error.log
 }
 {% endfor %}

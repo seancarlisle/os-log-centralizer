@@ -1,92 +1,109 @@
-{% for group in groups['keystone_all'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'keystone-apache-error'  then /var/log/openstack/{{ group | regex_replace('_', '-') }}-keystone-apache-error.log
+{% for host in groups['keystone_all'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'keystone-apache-error'  then /var/log/openstack/{{ host | regex_replace('_', '-') }}-keystone-apache-error.log
 
-   if $programname == 'keystone' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-keystone.log
+   if $programname == 'keystone' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-keystone.log
 
-   if $programname == 'ssl_access' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-ssl_access.log   
+   if $programname == 'ssl_access' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-ssl_access.log   
+
+   if $programname == 'error' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-apache-error.log 
+
+   if $programname == 'access' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-apache-access.log
+
+   if $programname == 'other-vhost-access' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-apache-other-vhost-access.log
+
+   if $programname == 'shibd' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-shibboleth-shibd.log
+
+   if $programname == 'shibd_warn' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-shibboleth-shibd_warn.log
+
+   if $programname == 'signature' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-shibboleth-signature.log
+
+   if $programname == 'transaction' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-shibboleth-transaction.log
 }
 {% endfor %}
 
 
-{% for group in groups['nova_all'] %}
-if $hostname == '{{  group | regex_replace('_', '-') }}' then {
-   if $programname == 'nova-api-metadata' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-nova-api-metadata.log
+{% for host in groups['nova_all'] %}
+if $hostname == '{{  host | regex_replace('_', '-') }}' then {
+   if $programname == 'nova-api-metadata' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-nova-api-metadata.log
 
-   if $programname == 'nova-api-os-compute' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-nova-api-os-compute.log
+   if $programname == 'nova-api-os-compute' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-nova-api-os-compute.log
 
-   if $programname == 'nova-compute' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-nova-compute.log
+   if $programname == 'nova-compute' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-nova-compute.log
 
-   if $programname == 'nova-scheduler' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-nova-scheduler.log
+   if $programname == 'nova-scheduler' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-nova-scheduler.log
 }
 {% endfor %}
 
-{% for group in groups['neutron_all'] %}
-if $hostname == '{{  group | regex_replace('_', '-') }}' then {
-   if $programname == 'neutron-dhcp-agent' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-dhcp-agent.log
-   if $programname == 'neutron-ha-tool' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-ha-tool.log
-   if $programname == 'neutron-l3-agent' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-l3-agent.log
-   if $programname == 'neutron-lbaasv2-agent' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-lbaasv2-agent.log
-   if $programname == 'neutron-linuxbridge-agent' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-linuxbridge-agent.log
-   if $programname == 'neutron-metadata-agent' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-metadata-agent.log
-   if $programname == 'neutron-metering-agent' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-metering-agent.log
-   if $programname == 'neutron-server' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-neutron-server.log
+{% for host in groups['neutron_all'] %}
+if $hostname == '{{  host | regex_replace('_', '-') }}' then {
+   if $programname == 'neutron-dhcp-agent' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-dhcp-agent.log
+   if $programname == 'neutron-ha-tool' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-ha-tool.log
+   if $programname == 'neutron-l3-agent' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-l3-agent.log
+   if $programname == 'neutron-lbaasv2-agent' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-lbaasv2-agent.log
+   if $programname == 'neutron-linuxbridge-agent' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-linuxbridge-agent.log
+   if $programname == 'neutron-metadata-agent' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-metadata-agent.log
+   if $programname == 'neutron-metering-agent' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-metering-agent.log
+   if $programname == 'neutron-server' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-neutron-server.log
 }
 {% endfor %}
 
-{% for group in groups['glance_all'] %}
-if $hostname == '{{  group | regex_replace('_', '-') }}' then {
-   if $programname == 'glance-api' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-glance-api.log
+{% for host in groups['glance_all'] %}
+if $hostname == '{{  host | regex_replace('_', '-') }}' then {
+   if $programname == 'glance-api' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-glance-api.log
 }
 {% endfor %}
 
-{% for group in groups['cinder_all'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'cinder-api' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-cinder-api.log
-   if $programname == 'cinder-backup' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-cinder-backup.log
-   if $programname == 'cinder-scheduler' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-cinder-scheduler.log
-   if $programname == 'cinder-volume' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-cinder-volume.log
+{% for host in groups['cinder_all'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'cinder-api' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-cinder-api.log
+   if $programname == 'cinder-backup' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-cinder-backup.log
+   if $programname == 'cinder-scheduler' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-cinder-scheduler.log
+   if $programname == 'cinder-volume' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-cinder-volume.log
 }
 {% endfor %}
 
-{% for group in groups['swift_all'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'account' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-account.log
-   if $programname == 'container' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-container.log
-   if $programname == 'container-error' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-container-error.log
-   if $programname == 'object' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-object.log
-   if $programname == 'object-error' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-object-error.log
+{% for host in groups['swift_all'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'account' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-account.log
+   if $programname == 'container' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-container.log
+   if $programname == 'container-error' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-container-error.log
+   if $programname == 'object' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-object.log
+   if $programname == 'object-error' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-object-error.log
 }
 {% endfor %}
 
-{% for group in groups['swift_proxy'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'proxy' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-proxy.log
-   if $programname == 'proxy-error' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-swift-proxy-error.log
+{% for host in groups['swift_proxy'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'proxy' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-proxy.log
+   if $programname == 'proxy-error' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-swift-proxy-error.log
 }
 {% endfor %}
 
-{% for group in groups['ceilometer_all'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'ceilometer-collector' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-ceilometer-collector.log
-   if $programname == 'ceilometer-polling' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-ceilometer-polling.log
-   if $programname == 'ceilometer-agent-notification' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-ceilometer-agent-notification.log
-   if $programname == 'ceilometer-api' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-ceilometer-api.log
+{% for host in groups['ceilometer_all'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'ceilometer-collector' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-ceilometer-collector.log
+   if $programname == 'ceilometer-polling' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-ceilometer-polling.log
+   if $programname == 'ceilometer-agent-notification' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-ceilometer-agent-notification.log
+   if $programname == 'ceilometer-api' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-ceilometer-api.log
 }
 {% endfor %}
 
-{% for group in groups['heat_all'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'heat-api' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-heat-api.log
-   if $programname == 'heat-api-cfn' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-heat-api-cfn.log
-   if $programname == 'heat-api-cloudwatch' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-heat-api-cloudwatch.log
-   if $programname == 'heat-engine' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-heat-engine.log
+{% for host in groups['heat_all'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'heat-api' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-heat-api.log
+   if $programname == 'heat-api-cfn' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-heat-api-cfn.log
+   if $programname == 'heat-api-cloudwatch' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-heat-api-cloudwatch.log
+   if $programname == 'heat-engine' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-heat-engine.log
 }
 {% endfor %}
 
-{% for group in groups['horizon_all'] %}
-if $hostname == '{{ group | regex_replace('_', '-') }}' then {
-   if $programname == 'horizon-error' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-horizon-error.log
-   if $programname == 'ssl_access' then /var/log/openstack/{{ group | regex_replace('_', '-') }}-ssl_access.log
+{% for host in groups['horizon_all'] %}
+if $hostname == '{{ host | regex_replace('_', '-') }}' then {
+   if $programname == 'horizon-error' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-horizon-error.log
+   if $programname == 'ssl_access' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-ssl_access.log
+   if $programname == 'error' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-apache-error.log
+   if $programname == 'access' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-apache-access.log
+   if $programname == 'other-vhost-access' then /var/log/openstack/{{ host | regex_replace('_', '-') }}-apache-other-vhost-access.log
 }
 {% endfor %}
