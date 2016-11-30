@@ -28,13 +28,16 @@ then
    fi
    for file in $(ls . | egrep '*.log[0-9]{10,20}$')
    do
-     /usr/local/bin/openstack object create openstack-logs $file &> /var/log/logshipper.log
+     /usr/local/bin/openstack object create openstack-logs $file &>> /var/log/logshipper.log
      if [ "$?" != "0" ]
      then
        echo "$(date +%F'-'%T) Upload of $file failed. Moving to /var/log/uploadfail..."
        mkdir -p /var/log/uploadfail
        cp $file /var/log/uploadfail
      fi
+     # Remove the file from the log directory because logrotate is not rotating logs out of existance
+     # If the upload failed, the file has been moved to /var/log/faillog anyway so its safe
+     rm $file
    done
 fi
 
@@ -48,13 +51,16 @@ then
    fi
    for file in $(ls . | egrep '*.log[0-9]{10,20}$')
    do
-     /usr/local/bin/openstack object create infrastructure-logs $file &> /var/log/logshipper.log
+     /usr/local/bin/openstack object create infrastructure-logs $file &>> /var/log/logshipper.log
      if [ "$?" != "0" ]
      then
        echo "$(date +%F'-'%T) Upload of $file failed. Moving to /var/log/uploadfail..."
        mkdir -p /var/log/uploadfail
        cp $file /var/log/uploadfail
      fi   
+     # Remove the file from the log directory because logrotate is not rotating logs out of existance
+     # If the upload failed, the file has been moved to /var/log/faillog anyway so its safe
+     rm $file
    done
 fi
 
@@ -68,13 +74,16 @@ then
    fi
    for file in $(ls . | egrep '*.log[0-9]{10,20}$')
    do
-     /usr/local/bin/openstack object create operatingsystem-logs $file &> /var/log/logshipper.log
+     /usr/local/bin/openstack object create operatingsystem-logs $file &>> /var/log/logshipper.log
      if [ "$?" != "0" ]
      then
        echo "$(date +%F'-'%T) Upload of $file failed. Moving to /var/log/uploadfail..."
        mkdir -p /var/log/uploadfail
        cp $file /var/log/uploadfail
      fi
+     # Remove the file from the log directory because logrotate is not rotating logs out of existance
+     # If the upload failed, the file has been moved to /var/log/faillog anyway so its safe
+     rm $file
    done
 fi
 
@@ -88,13 +97,16 @@ then
    fi
    for file in $(ls . | egrep '*.log[0-9]{10,20}$')
    do
-     /usr/local/bin/openstack object create networkgear-logs $file &> /var/log/logshipper.log
+     /usr/local/bin/openstack object create networkgear-logs $file &>> /var/log/logshipper.log
      if [ "$?" != "0" ]
      then
        echo "$(date +%F'-'%T) Upload of $file failed. Moving to /var/log/uploadfail..."
        mkdir -p /var/log/uploadfail
        cp $file /var/log/uploadfail
      fi  
+     # Remove the file from the log directory because logrotate is not rotating logs out of existance
+     # If the upload failed, the file has been moved to /var/log/faillog anyway so its safe
+     rm $file
    done
 fi
 
