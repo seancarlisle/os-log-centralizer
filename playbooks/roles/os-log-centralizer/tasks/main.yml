@@ -77,8 +77,3 @@
     src: logshipper
     dest: /usr/local/bin
     mode: "0755"
-
-- name: test task for all group
-  template:
-    src: temp-log.j2
-    dest: /root/temp-log
